@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+# determine function complexity based on Mccabe model of program complexity
+# anything greater than 10 is usually considered bad, or at least questionable
+#
+# originally written by Rick Cobb, modified by Brian Renaud to add out
+# of function complexity detection and to fix some minor bugs
+
+# NOTE the beginning and ending braces "{}" in a function must be at the
+# same indent level, or this tools will NOT work!!
+
+# heuristics for function declaration detection:
+#	Handles three conventions:
+#
+#	|int foo()
+#	|	char *
+#	|	{
+
+#	|int foo()
+#	|char *
+#	|[	]*{
+
+#	or the preferred
+#	int
+#	foo()
+#	[]*{
+
+
+if [ $# = 0 ]
+then
+	echo "usage: mccabe [-n] file [file]" > /dev/tty
+	exit 1
+fi
+
+# the -n flag (No Header) is useful if you are using this to produce data for
+# other tools
+
+HEADER=1
+if [ $1 = "-n" ]
+then
+	HEADER=0
+	shift
+fi
+
+if [ $HEADER = "1" ]
+then
+	echo "File          	Name           	Complexity	No. of returns"
+	echo "--------------	---------------	----------	--------------"
+fi
+
+for file in $*
+do
+	stripcom ${file} |\
+	awk 'BEGIN	{
+	File = "'"${file}"'";
+	Header = '${HEADER}';
+	gotfunction = "FALSE";
+	infunction = "FALSE";
+	nofunc = "***"
+	complexity[nofunc] = 1;
+	returns[nofunc] = 0;
+	casecount[nofunc] = 0;
+	}
+
+# Should recognize the actual function:
+/^[_a-zA-Z][_a-zA-Z]*.*\(.*\)[ 	]*$/ && $1 !~ /extern/ && infunction == "FALSE"{
+
+	gotfunction="TRUE";
+
+	# strip off parens (so we can make PARMS statement)
+	endpos = index($0,"(");
+	funcname = substr($0,1,endpos-1);
+
+	# strip off beginning declaratory stuff (if any)
+	parts = split(funcname,funky," 	");
+	funcname = funky[parts];
+	complexity[funcname] = 1;	# default complexity is 1
+	casecount[funcname] = 0;
+	switchcount[funcname] = 0;
+
+	next;
+	}
+
+#do not count preprocessor lines
+/^#/	{ next; }
+
+# find end of formal parameters
+
+gotfunction == "TRUE" && /[ 	]*{/	{
+	gotfunction = "FALSE";
+	infunction = "TRUE";
+
+	depth = index($0,"{");
+	next;
+	}
+
+infunction == "TRUE" && /(^|[ \t;])(if|else|while|for)($|[ \t(])/ {
+	complexity[funcname]++;
+	}
+
+infunction == "TRUE" && /(^|[ \t;])(switch)($|[ \t(])/ {
+	switchcount[funcname]++;
+	}
+
+infunction == "TRUE" && /(^|[ \t;])(case|default[ \t]*:)($|[ \t])/ {
+	casecount[funcname]++;
+	}
+
+infunction == "TRUE" && /(^|[ \t;])return([ \t(]|$)/	{
+	returns[funcname]++;
+	}
+
+infunction == "TRUE" && /(^|[ \t;])exit($|[ \t(])/	{
+	returns[funcname]++;
+	}
+
+infunction == "TRUE" && /}/	{ 
+	if (index($0,"}") == depth)
+		{
+		infunction = "FALSE";
+		gotfunction = "FALSE";
+		}
+	next;
+	}
+
+infunction == "FALSE" && /(^|[ \t;])(if|else|while|for)($|[ \t(])/ {
+	complexity[nofunc]++;
+	}
+
+infunction == "FALSE" && /(^|[ \t;])(case|default[ \t]*:)($|[ \t])/ {
+	casecount[nofunc]++;
+	}
+
+infunction == "FALSE" && /(^|[ \t;])return([ \t(]|$)/	{
+	returns[nofunc]++;
+	}
+
+infunction == "FALSE" && /(^|[ \t;])exit($|[ \t(])/	{
+	returns[nofunc]++;
+	}
+
+END	{
+	count = 0;
+	for (xfunc in complexity)
+		{
+		if ( xfunc == nofunc &&\
+		     complexity[ xfunc ]	== 1 &&\
+		     casecount[ xfunc ]	== 0 &&\
+		     returns[ xfunc ]	== 0)
+			continue;
+		count++;
+		complex=complexity[xfunc];
+		cases=casecount[xfunc];
+
+		if ( Header )
+			printf("%-14s\t%-15s\t%10d\t%10d\n",\
+				File, xfunc, complex + cases, returns[xfunc]);
+		else
+			printf("%s\t%s\t%d\t%d\n",\
+				File, xfunc, complex + cases, returns[xfunc]);
+		}
+	if ( count == 0 )
+		{
+		# this means that no functions were found in the file
+		if ( Header )
+			printf("%-14s\t%-15s\t%10d\t%10d\n",\
+			  File, nofunc, complexity[nofunc], returns[nofunc]);
+		else
+			printf("%s\t%s\t%d\t%d\n",\
+			  File, nofunc, complexity[nofunc], returns[nofunc]);
+		}
+	}
+	'
+done
+exit 0

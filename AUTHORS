@@ -1,0 +1,30 @@
+This package is now being mainteaned by the Libresoft research group.
+
+Contact us at libresoft-tools-devel@lists.morfeo-project.org
+
+Below you may find the original AUTHORS file.
+
+
+Original AUTHORS file
+=====================
+In addition, Marty Leisner (leisner.henr@xerox.com) cleaned up the
+ancient makefiles in the system.  However, any problems you might
+have with the makefiles are due to my meddling, not to his efforts.
+
+Addresses:
+
+    Brian Renaud
+    email:        domainish:  bdr@huron.ann-arbor.mi.us
+                  uucp style: {ames, uunet!umix}!sharkey!clip!huron!bdr
+
+    paper mail:   8419 Berkshire Dr.
+                  Ypsilanti, Michigan  48194
+                  USA
+
+    Rick Cobb
+    email:        indetech!rec
+
+
+Brian Renaud
+August 11, 1989
+=====================

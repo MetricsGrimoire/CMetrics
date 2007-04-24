@@ -1,0 +1,4 @@
+SUBDIRS = mccabe halstead kdsi utils 
+
+EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL README TODO
+#AUTOMAKE_OPTIONS = foreign

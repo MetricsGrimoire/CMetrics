@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# compute halstead volume of input
+# see DeMarco "Controlling Software Projects, Management, Measurement
+# and Estimation", appendix D
+# algorithm
+# 	strip comments
+#	remove strings
+#	remove delimiters
+#	deal with *++var and *--var usages
+#	break input into tokens
+#	sort - to produce total number of tokens
+#	uniq - to get size of vocabulary
+#	volume = <token count> * log2 ( vocabulary size )
+
+#	n1 == number of unique operators
+#	n2 == number of unique operands
+#	N1 == number of total operators
+#	N2 == number of total operands
+ 
+N1=/tmp/$$.N1
+N2=/tmp/$$.N2
+n1=/tmp/$$.n1
+n2=/tmp/$$.n2
+
+trap '/bin/rm -f ${n1} ${n2} ${N1} ${N2} ; exit 1' 1 2 15
+
+if [ $# -lt 1 ]
+then
+	echo "usage: $0 <file> [<file>]"
+	exit 1
+fi
+
+for file in $*
+do
+	stripcom ${file} | stripstr |\
+	c_halsfilt 2> ${N1} |\
+	awk ' { for ( i = 1; i <= NF; i++) print $i; } ' |\
+	sort > ${N2}
+
+	sort -u ${N1} > ${n1}
+	uniq < ${N2} > ${n2}
+
+	wc -l ${n1} ${n2} ${N1} ${N2} |\
+	awk '
+	BEGIN {
+		File = "'"${file}"'";
+		if ( !getline )
+			printf("%s: no line count for n1\n", "'"$0"'");
+		u_opators = $1;
+
+		if ( !getline )
+			printf("%s: no line count for n2\n", "'"$0"'");
+		u_opands = $1;
+
+		if ( !getline )
+			printf("%s: no line count for N1\n", "'"$0"'");
+		t_opators = $1;
+
+		if ( !getline )
+			printf("%s: no line count for N2\n", "'"$0"'");
+		t_opands = $1;
+
+		# program length: N = N1 + N2
+		#
+		pg_length = t_opators + t_opands;
+
+		# program volume: V = N log<base2> (n1 + n2)
+		#
+		pg_volume = pg_length * (log(u_opators + u_opands)/log(2));
+
+		# program level: L = (2/n1) * (n2/N2)
+		# 2 is number of operators in smallest possible program
+		#
+		pg_level = (2 / u_opators) * (u_opands / t_opands);
+
+		# estimated effective mental discriminations: E^ = V / L
+		#
+		mental_disc = pg_volume / pg_level;
+
+		# estimated mental discriminations per second in C: 50
+		# I assume performance is normally distributed
+		# therefore per hour: 180,000
+		# so estimated time to program: T^ = E^ / 180,000 
+		# DOES NOT SEEM VERY ACCURATE FOR LARGE PROGRAMS
+		# ALL TIME STUFF REMOVED VIA COMMENTS
+		#time = mental_disc / 180000;
+
+		# print File N V L E^ T^
+		#printf("%s\t%d\t%.0f\t%.6f\t%.0f\t%.1f\n",\
+		#	File, pg_length, pg_volume, pg_level, mental_disc,time);
+
+		# print File N V L E^
+		printf("%s\t%d\t%.0f\t%.6f\t%.0f\n",\
+			File, pg_length, pg_volume, pg_level, mental_disc);
+		exit;
+	}
+	'
+done
+
+/bin/rm ${n1} ${n2} ${N1} ${N2}
+exit 0
