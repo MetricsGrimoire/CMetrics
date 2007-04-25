@@ -1,1 +1,9 @@
+2007-04-25  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 
+	* debian/:
+
+	Added files to generate a Debian package
+          
+2007-04-24  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
+
+	* Initial import 
