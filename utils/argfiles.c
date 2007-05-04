@@ -1,6 +1,8 @@
 /* strip comments from c program */
 /* read from stdin, write to stdout */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "argfiles.h"
 
 FILE	*nextfp();

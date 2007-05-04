@@ -2,6 +2,7 @@
  * between (and including) two quotes (")
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 
 typedef char	Bool;

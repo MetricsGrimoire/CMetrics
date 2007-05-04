@@ -1,5 +1,15 @@
 2007-05-04  Carlos Garcia Campos  <carlosgc@gsyc.escet.urjc.es>
 
+	* configure.ac:
+	* kdsi/kdsi.c:
+	* utils/stripcom.c:
+	* utils/stripstr.c:
+	* utils/argfiles.c:
+	
+	Add missing headers to fix compile warnings. 
+
+2007-05-04  Carlos Garcia Campos  <carlosgc@gsyc.escet.urjc.es>
+
 	* mkinstalldirs:
 	* depcomp:
 	* INSTALL:

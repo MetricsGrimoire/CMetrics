@@ -19,6 +19,7 @@
 ***************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef	int	Token;
 #define	STOP_INPUT	0
