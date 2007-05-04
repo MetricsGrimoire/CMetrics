@@ -1,3 +1,18 @@
+2007-05-04  Carlos Garcia Campos  <carlosgc@gsyc.escet.urjc.es>
+
+	* mkinstalldirs:
+	* depcomp:
+	* INSTALL:
+	* missing:
+	* install-sh:
+
+	Remove generated files. 
+
+	* common/cmts-autogen.sh:
+	* autogen.sh:
+
+	Add autogen script. 
+
 2007-04-25  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 
 	* debian/:
