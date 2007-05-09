@@ -2,10 +2,10 @@ Source: cmetrics
 Section: libresoft
 Priority: optional
 Maintainer: Israel Herraiz <herraiz@computer.org>
-Build-Depends: debhelper (>= 4.0.0), gawk, flex
+Build-Depends: debhelper (>= 4.0.0), gawk|mawk, flex
 Standards-Version: 3.6.2
 
 Package: cmetrics
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, gawk, flex
+Depends: ${shlibs:Depends}, ${misc:Depends}, gawk|mawk, flex
 Description: Set of tools to measure size and complexity of C files
