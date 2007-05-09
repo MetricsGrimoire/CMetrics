@@ -1,1 +1,12 @@
+=============
+cmetrics  0.1
+=============
 
+ * Initial release
+
+Thanks:
+
+ * Carlos Garcia Campos for his help with all the autotools stuff, and for the
+   changes in the code to get rid of the warning messages. 
+ * Brian Renaud and Rick Cobb for the original code that is the base of this
+   package 

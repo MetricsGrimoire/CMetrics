@@ -1,5 +1,11 @@
 2007-05-09  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 
+	* NEWS:
+	
+	Release 0.1
+
+2007-05-09  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
+
 	* debian/control:
 	
 	Changed gawk dependency to gawk | mawk
