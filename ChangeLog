@@ -1,3 +1,9 @@
+2007-05-09  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
+
+	* debian/control:
+	
+	Changed gawk dependency to gawk | mawk
+
 2007-05-04  Carlos Garcia Campos  <carlosgc@gsyc.escet.urjc.es>
 
 	* configure.ac:
