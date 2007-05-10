@@ -1,3 +1,9 @@
+2007-05-10  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
+
+	* debian/rules:
+	
+	Updated the rules file to use the autogen.sh script
+
 2007-05-09  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 
 	* NEWS:
