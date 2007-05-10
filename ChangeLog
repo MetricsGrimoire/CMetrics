@@ -3,6 +3,8 @@
 	* debian/rules:
 	
 	Updated the rules file to use the autogen.sh script
+	Removed some references to detras (the rules file was imported
+	from that module) 
 
 2007-05-09  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 

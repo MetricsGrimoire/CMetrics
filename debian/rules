@@ -37,7 +37,7 @@ build-stamp: configure-stamp
 
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/detras.sgml > detras.1
+	#docbook-to-man debian/cmetrics.sgml > cmetrics.1
 
 	touch build-stamp
 
@@ -57,7 +57,7 @@ install: build
 	dh_clean -k 
 	dh_installdirs
 
-	# Add here commands to install the package into debian/detras.
+	# Add here commands to install the package into debian/cmetrics.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/cmetrics
 
 
