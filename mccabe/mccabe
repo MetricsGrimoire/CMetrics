@@ -43,8 +43,8 @@ fi
 
 if [ $HEADER = "1" ]
 then
-	echo "File          	Name           	Complexity	No. of returns"
-	echo "--------------	---------------	----------	--------------"
+	echo "File          	Name           	SLOC            Complexity	 No. of returns"
+	echo "--------------	---------------	----------	--------------   --------------"
 fi
 
 for file in $*
@@ -57,6 +57,7 @@ do
 	infunction = "FALSE";
 	nofunc = "***"
 	complexity[nofunc] = 1;
+	sloc[nofunc] = 0;
 	returns[nofunc] = 0;
 	casecount[nofunc] = 0;
 	}
@@ -74,6 +75,7 @@ do
 	parts = split(funcname,funky," 	");
 	funcname = funky[parts];
 	complexity[funcname] = 1;	# default complexity is 1
+	sloc[funcname] = 0;
 	casecount[funcname] = 0;
 	switchcount[funcname] = 0;
 
@@ -122,6 +124,10 @@ infunction == "TRUE" && /}/	{
 	next;
 	}
 
+infunction == "TRUE" {
+	sloc[funcname]++;
+	}
+
 infunction == "FALSE" && /(^|[ \t;])(if|else|while|for)($|[ \t(])/ {
 	complexity[nofunc]++;
 	}
@@ -138,6 +144,10 @@ infunction == "FALSE" && /(^|[ \t;])exit($|[ \t(])/	{
 	returns[nofunc]++;
 	}
 
+infunction == "FALSE" {
+	sloc[nofunc]++;
+	}
+
 END	{
 	count = 0;
 	for (xfunc in complexity)
@@ -152,21 +162,21 @@ END	{
 		cases=casecount[xfunc];
 
 		if ( Header )
-			printf("%-14s\t%-15s\t%10d\t%10d\n",\
-				File, xfunc, complex + cases, returns[xfunc]);
+			printf("%-14s\t%-15s\t%10d\t%10d\t%10d\n",\
+				File, xfunc, sloc[xfunc],complex + cases, returns[xfunc]);
 		else
-			printf("%s\t%s\t%d\t%d\n",\
-				File, xfunc, complex + cases, returns[xfunc]);
+			printf("%s\t%s\t%d\t%d\t%d\n",\
+				File, xfunc,sloc[xfunc], complex + cases, returns[xfunc]);
 		}
 	if ( count == 0 )
 		{
 		# this means that no functions were found in the file
 		if ( Header )
-			printf("%-14s\t%-15s\t%10d\t%10d\n",\
-			  File, nofunc, complexity[nofunc], returns[nofunc]);
+			printf("%-14s\t%-15s\t%10d\t%10d\t%10d\n",\
+			  File, nofunc, sloc[nofunc],complexity[nofunc], returns[nofunc]);
 		else
-			printf("%s\t%s\t%d\t%d\n",\
-			  File, nofunc, complexity[nofunc], returns[nofunc]);
+			printf("%s\t%s\t%d\t%d\t%d\n",\
+			  File, nofunc, sloc[nofunc],complexity[nofunc], returns[nofunc]);
 		}
 	}
 	'
