@@ -1,3 +1,9 @@
+2009-05-12  Israel Herraiz <isra@herraiz.org>
+
+	* halstead/Makefile.am
+
+	Fixing Lex library command line option.
+	
 2007-11-22  Israel Herraiz <herraiz@gsyc.escet.urjc.es>
 
 	* mccabe/mccabe:
