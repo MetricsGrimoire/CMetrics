@@ -4,6 +4,7 @@
 #
 # originally written by Rick Cobb, modified by Brian Renaud to add out
 # of function complexity detection and to fix some minor bugs
+# Marko Schuetz added counting of conditional expressions.
 
 # NOTE the beginning and ending braces "{}" in a function must be at the
 # same indent level, or this tools will NOT work!!
@@ -49,7 +50,9 @@ fi
 
 for file in $*
 do
-	stripcom ${file} |\
+	stripcom ${file} | \
+	stripstr | \
+	sed -e "s|'?'|' '|" | \
 	awk 'BEGIN	{
 	File = "'"${file}"'";
 	Header = '${HEADER}';
@@ -99,6 +102,10 @@ infunction == "TRUE" && /(^|[ \t;])(if|else|while|for)($|[ \t(])/ {
 	complexity[funcname]++;
 	}
 
+infunction == "TRUE" && /\?/ {
+        complexity[funcname] += split($0,condEx,"?") - 1;
+        }
+
 infunction == "TRUE" && /(^|[ \t;])(switch)($|[ \t(])/ {
 	switchcount[funcname]++;
 	}
@@ -131,6 +138,10 @@ infunction == "TRUE" {
 infunction == "FALSE" && /(^|[ \t;])(if|else|while|for)($|[ \t(])/ {
 	complexity[nofunc]++;
 	}
+
+infunction == "FALSE" && /\?/ {
+        complexity[nofunc] += split($0,condEx,"?") - 1;
+        }
 
 infunction == "FALSE" && /(^|[ \t;])(case|default[ \t]*:)($|[ \t])/ {
 	casecount[nofunc]++;

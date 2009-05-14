@@ -1,3 +1,10 @@
+2009-05-14  Israel Herraiz <isra@herraiz.org>
+
+	* mccabe/mccabe:
+
+	Adding counting conditional expressions with ?.
+	Patch submitted by Marko Schütz <markoschuetz@web.de>
+	
 2009-05-12  Israel Herraiz <isra@herraiz.org>
 
 	* halstead/Makefile.am
