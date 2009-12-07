@@ -1,3 +1,10 @@
+2009-12-07  Israel Herraiz <isra@herraiz.org>
+
+	* hasltead/hasltead
+
+	Fixing halstead script to accept empty files.
+	Patch submitted by Bousquet Fabien <fabien.bousquet@carmatsas.com>
+	
 2009-05-14  Israel Herraiz <isra@herraiz.org>
 
 	* mccabe/mccabe:
