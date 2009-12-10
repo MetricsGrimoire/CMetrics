@@ -1,3 +1,23 @@
+==============
+cmetrics  0.11
+==============
+
+ * New release fixing some bugs.
+
+Changes since version 0.1:
+
+ * Fixed Lex library command line option
+ * McCabe now counts conditional expressions with ?
+ * Halstead now accept empty files as input
+ * McCabe reports the number of SLOC per function, as well as
+   cyclomatic complexity.
+
+Thanks:
+
+ * Fabien Bousquet for the contributions to the Halstead tool
+ * Marko Schütz for the contributions to the McCabe tool
+
+
 =============
 cmetrics  0.1
 =============

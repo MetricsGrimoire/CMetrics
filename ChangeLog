@@ -1,6 +1,15 @@
+2009-12-10  Israel Herraiz <isra@herraiz.org>
+
+	* README
+	* NEWS
+	* configure.ac:
+
+	Release 0.11.
+	Fixing README format.
+
 2009-12-07  Israel Herraiz <isra@herraiz.org>
 
-	* hasltead/hasltead
+	* hasltead/hasltead:
 
 	Fixing halstead script to accept empty files.
 	Patch submitted by Bousquet Fabien <fabien.bousquet@carmatsas.com>

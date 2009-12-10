@@ -2,43 +2,43 @@ C metrics package.
 
 Imported from the C Metrics package by Brian Renaud.
 
-It has been "adopted" by Libresoft with permission of the original author, and it is now
-part of the Libresoft-tools project.
+It has been "adopted" by Libresoft with permission of the original
+author, and it is now part of the Libresoft-tools project.
 
-Check http://forge.morfeo-project.org/projects/libresoft-tools for details
+Check http://forge.morfeo-project.org/projects/libresoft-tools for
+details
 
 What tools are included in this package?
 ========================================
 
-mccabe
-------
-Measures cyclomatic's complexity and number of function returns for a given C file.
-It returns the values at the level of function (this is a value per function).
+mccabe ------ Measures cyclomatic's complexity and number of function
+returns for a given C file.  It returns the values at the level of
+function (this is a value per function).
 
-It uses stripstr to remove strings from the C file.
-It uses stripcom to remove comments from the C file.
+It uses stripstr to remove strings from the C file.  It uses stripcom
+to remove comments from the C file.
 
-kdsi
-----
+kdsi ----
 
-Measures SLOC, number of blank lines, number of comment lines and number of comments for
-a C file.
+Measures SLOC, number of blank lines, number of comment lines and
+number of comments for a C file.
 
-The output is the above metrics, in that order, at a file level (this is, a set of values per file).
+The output is the above metrics, in that order, at a file level (this
+is, a set of values per file).
 
-halstead
---------
+halstead --------
 
-Masures Halstead's length, volumen, level and mental discriminations for a C file.
+Masures Halstead's length, volumen, level and mental discriminations
+for a C file.
 
-The output is the above metrics, in that order, at a file level (this is, a set of values per file).
+The output is the above metrics, in that order, at a file level (this
+is, a set of values per file).
 
-Other utilities
----------------
+Other utilities ---------------
 
-stripcom to remove the comments of a C file
-stripstr to remove the strings of a C file
+stripcom to remove the comments of a C file stripstr to remove the
+strings of a C file
 
-With these two utilities and indent you can generate "clean" C code (this is,
-only code, with the same indentation style, etc).
+With these two utilities and indent you can generate "clean" C code
+(this is, only code, with the same indentation style, etc).
 
