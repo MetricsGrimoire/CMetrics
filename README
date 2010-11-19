@@ -41,4 +41,3 @@ strings of a C file
 
 With these two utilities and indent you can generate "clean" C code
 (this is, only code, with the same indentation style, etc).
-
