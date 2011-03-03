@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from commands import getoutput
+
+MCCABE = "mccabe"
+KDSI = "kdsi"
+HALSTEAD = "hasltead"
+
+class SourceCodeFile:
+
+    def __init__ (name):
+        self.name = name
+        self.functions = []
+        self.sloc = 0
+        self.loc = 0
+        self.blanks = 0
+        self.comments = 0
+        self.comment_l = 0
+        self.hlength = 0
+        self.hvolume = 0
+        self.hlevel = 0
+        self.hmd = 0
+
+    def addFunction (self, func):
+
+        func.parent_file = self
+
+        self.functions.append(func)
+
+    def getFunctions (self):
+
+        return self.functions
+
+    def getMaxCycloFunc (self):
+
+        max_cyclo = 1
+
+        candidate = None
+
+        for x in self.functions:
+
+            if x.cyclo >= max_cyclo:
+                max_cyclo = x.cyclo
+                candidate = x
+
+        return candidate
+
+    def getMinCycloFunc (self):
+    
+        min_cyclo = 1
+
+        candidate = None
+
+        for x in self.functions:
+
+            if x.cyclo <= min_cyclo:
+                min_cyclo = x.cyclo
+                candidate = x
+
+        return candidate
+
+    def getAvgCyclo (self):
+
+        cyclos = [x.cyclo for x in self.functions]
+
+        return sum(cyclos) / length (cyclos)
+
+    def getMedianCyclo (self):
+
+        cyclos = [x.cyclo for x in self.functions]
+
+        if len(cyclos) % 2 == 1:
+            return cyclos[(len(cyclos)+1)/2-1]
+        else:
+            lower = cyclos[len(cyclos)/2-1]
+            upper = cyclos[len(cyclos)/2]
+
+        return (lower + upper) / 2  
+        
+class Function:
+
+    def __init__(self, name, cyclo, sloc, returns):
+
+        self.name = name
+        self.parent_file = None
+        self.sloc = sloc
+        self.cyclo = cyclo
+        self.returns = returns
+
+
+class CMetrics:
+        
+    def measure_file(sourcecode_fn, mccabe_cmd, halstead_cmd, kdsi_cmd):
+
+        f = SourceCodeFile (sourcecode_fn)
+    
+        mccabe_o = getoutput("%s -n %s" % (mccabe_cmd, f.name))
+    
+        for l in mccabe_o.split('\n'):
+            _name, func, sloc, cyclo, returns = l.split()
+            f.addFunction (Function (func, cyclo, sloc, returns))
+        
+        kdsi_o = getoutput("%s %s" % (kdsi_cmd, f.name))
+
+        loc, blanks, comment_l, comments, _name = kdsi_o.split()
+        f.loc = loc
+        f.blanks = blanks
+        f.comment_l = comment_l
+        f.comments = comments
+
+        halstead_o = getoutput("%s %s" % (halstead_cmd, f.name))
+
+        _name, hlength, hvolume, hlevel, hmd = halstead_o.split()
+        f.hlength = hlength
+        f.hvolume = hvolume
+        f.hlevel = hlevel
+        f.hmd = hmd
+        
+        return True
