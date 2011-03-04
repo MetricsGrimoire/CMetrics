@@ -1,7 +1,27 @@
 # -*- coding: utf-8 -*-
 
+# Copyright (C) 2007-2011 Israel Herraiz
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Library General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Authors : Israel Herraiz <isra@herraiz.org>
+
+
 from commands import getoutput
 import os
+import argparse
 
 MCCABE = "mccabe"
 KDSI = "kdsi"
@@ -188,6 +208,20 @@ class CMetrics:
                                       fun.returns)            
 if __name__ == '__main__':
 
+
+    parser = argparse.ArgumentParser(description='Measure size and complexity metrics for C source code files')
+
+    parser.add_argument('target_dir', nargs=1,
+                        help='directory with sources (recursively scanned)')
+
+    parser.add_argument('-f', '--functions', action='store_true',
+                        help='show metrics for functions instead of files')
+    
+    args = parser.parse_args()
+
     c = CMetrics(MCCABE, HALSTEAD, KDSI)
-    c.measure_target(".")
-    c.print_files_with_functions()
+    c.measure_target(args.target_dir[0])
+    if args.functions:
+        c.print_files_with_functions()
+    else:
+        c.print_files_without_functions()
