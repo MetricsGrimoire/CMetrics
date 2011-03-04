@@ -1,5 +1,7 @@
-BINdir = ${prefix}/bin
-dist_BIN_SCRIPTS = cmetrics
+SOURCE=cmetrics
+
+BINdir=${prefix}/bin
+dist_BIN_SCRIPTS = $(SOURCE)
 
 SUBDIRS = mccabe halstead kdsi utils 
 
