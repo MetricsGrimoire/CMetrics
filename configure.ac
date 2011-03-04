@@ -8,6 +8,14 @@ AC_PROG_AWK
 AM_PROG_LEX
 AM_PATH_PYTHON([2.5])
 
+case "$PYTHON_VERSION" in
+   3.0*|3.1*|3.2*)
+	AC_MSG_ERROR([
+		Python 3 not compatible with cmetrics.
+		Set PYTHON to your Python 2.x binary.
+		]);;
+esac
+
 AC_CONFIG_FILES([
 Makefile 
 mccabe/Makefile 

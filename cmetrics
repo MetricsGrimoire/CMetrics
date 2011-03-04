@@ -3,7 +3,6 @@
 
 from commands import getoutput
 import os
-import sys
 
 MCCABE = "mccabe"
 KDSI = "kdsi"
@@ -174,8 +173,22 @@ class CMetrics:
                                   min_cyclo,
                                   f.getAvgCyclo(),
                                   f.getMedianCyclo())
+
+    def print_files_with_functions(self):
+        template = "{0:<12}  {1:<10}  {2:>5}  {3:>5}  {4:>5}"
+        print template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",)
+        template = "{0:<12}  {1:<10}  {2:>5}  {3:>5}  {4:>5}"
+        for f in self._files:
+
+            for fun in f.functions:                
+            
+                print template.format(f.name,
+                                      fun.name,
+                                      fun.sloc,
+                                      fun.cyclo,
+                                      fun.returns)            
 if __name__ == '__main__':
 
     c = CMetrics(MCCABE, HALSTEAD, KDSI)
     c.measure_target(".")
-    c.print_files_without_functions()
+    c.print_files_with_functions()
