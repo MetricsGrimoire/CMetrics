@@ -134,11 +134,13 @@ class CMetrics:
         f = SourceCodeFile (sourcecode_fn)
     
         mccabe_o = getoutput("%s -n %s" % (self._mccabe_cmd, f.path))
-    
+
         for l in mccabe_o.split('\n'):
-            _name, func, sloc, cyclo, returns = l.split()
+
+            _name, func, sloc, cyclo, returns = l.split('\t')
+
             f.addFunction (Function (func, cyclo, sloc, returns))
-        
+            
         kdsi_o = getoutput("%s %s" % (self._kdsi_cmd, f.path))
 
         loc, blanks, comment_l, comments, _name = kdsi_o.split()
