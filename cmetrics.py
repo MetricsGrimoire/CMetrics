@@ -196,15 +196,15 @@ class CMetrics:
                                   f.getMedianCyclo())
 
     def print_files_with_functions(self):
-        template = "{0:<12}  {1:<10}  {2:>5}  {3:>5}  {4:>5}"
+        template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
         print template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",)
-        template = "{0:<12}  {1:<10}  {2:>5}  {3:>5}  {4:>5}"
+        template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
         for f in self._files:
 
             for fun in f.functions:                
             
-                print template.format(f.name,
-                                      fun.name,
+                print template.format(f.name[0:10],
+                                      fun.name.split()[-1][0:15],
                                       fun.sloc,
                                       fun.cyclo,
                                       fun.returns)            
