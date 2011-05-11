@@ -1,3 +1,15 @@
+=============
+cmetrics  0.2
+=============
+
+ * New release with new command line interface
+
+Changes since version 0.11
+
+ * New command line interface, easier to use
+ * Recursive scanning of C files
+ * Reports available now at file and function levels
+
 ==============
 cmetrics  0.11
 ==============

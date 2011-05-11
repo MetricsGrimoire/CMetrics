@@ -1,4 +1,4 @@
-AC_INIT([cmetrics],[0.11], [libresoft-tools-devel@lists.morfeo-project.org])
+AC_INIT([cmetrics],[0.2], [libresoft-tools-devel@lists.morfeo-project.org])
 AM_INIT_AUTOMAKE([1.11])
 
 AC_PROG_CC
