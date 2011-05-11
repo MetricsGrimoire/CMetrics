@@ -98,10 +98,16 @@ class SourceCodeFile:
             upper = cyclos[len(cyclos)/2]
 
         return (lower + upper) / 2  
-        
+
+    def getTotalCyclo (self):
+
+        cyclos = [x.cyclo for x in self.functions]
+
+        return sum(cyclos)
+    
 class Function:
 
-    def __init__(self, name, cyclo, sloc, returns):
+    def __init__ (self, name, cyclo, sloc, returns):
 
         self.name = name
         self.parent_file = None
@@ -119,7 +125,7 @@ class CMetrics:
         self._halstead_cmd = halstead_cmd
         self._kdsi_cmd = kdsi_cmd
         
-    def measure_target(self, target_dir):
+    def measure_target (self, target_dir):
 
         for root, dirs, files in os.walk(target_dir):
             for f in files:
@@ -129,7 +135,7 @@ class CMetrics:
                 if '.c' in ext or '.h' in ext:
                     self._files.append (self.measure_file(path))
         
-    def measure_file(self, sourcecode_fn):
+    def measure_file (self, sourcecode_fn):
 
         f = SourceCodeFile (sourcecode_fn)
     
@@ -160,10 +166,17 @@ class CMetrics:
         
         return f
 
-    def print_files_without_functions(self):
-        template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9}  {10:>9}  {11:>5}  {12:>5}  {13:>5}  {14:>5}"
-        print template.format("FILE", "SLOC", "LOC", "FUNCS", "BLANK", "COM.L", "COM.N", "H LEN", "H VOL", "H LEVEL", "H MEN. D.",  "MAXCY",  "MINCY", "AVGCY", "MEDCY",)
-        template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9.3e}  {10:>9.3e}  {11:>5}  {12:>5}  {13:>5}  {14:>5}"
+    def print_files_without_functions (self, show_path=False, show_header=True):
+
+        if show_header:
+            template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9}  {10:>9}  {11:>5}  {12:>5}  {13:>5}  {14:>5}  {15:>5}"
+            print template.format("FILE", "SLOC", "LOC", "FUNCS", "BLANK", "COM.L", "COM.N", "H LEN", "H VOL", "H LEVEL", "H MEN. D.",  "MAXCY",  "MINCY", "AVGCY", "MEDCY", "TOTCY",)
+
+        if show_path:
+            template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9.3e}  {10:>9.3e}  {11:>5}  {12:>5}  {13:>5}  {14:>5}  {15:>5} {16:<}"
+        else:
+            template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9.3e}  {10:>9.3e}  {11:>5}  {12:>5}  {13:>5}  {14:>5}  {15:>5}"
+
         for f in self._files:
 
             max_cyclo_func = f.getMaxCycloFunc()
@@ -178,8 +191,9 @@ class CMetrics:
             else:
                 min_cyclo = 1
                 
-            
-            print template.format(f.name,
+
+            if show_path:
+                print template.format(f.name,
                                   f.sloc,
                                   f.loc,
                                   f.nfuncs,
@@ -193,21 +207,58 @@ class CMetrics:
                                   max_cyclo,
                                   min_cyclo,
                                   f.getAvgCyclo(),
-                                  f.getMedianCyclo())
+                                  f.getMedianCyclo(),
+                                  f.getTotalCyclo(),
+                                  f.path)
+                            
+            else:
+                print template.format(f.name,
+                                  f.sloc,
+                                  f.loc,
+                                  f.nfuncs,
+                                  f.blanks,
+                                  f.comment_l,
+                                  f.comments,
+                                  f.hlength,
+                                  f.hvolume,
+                                  f.hlevel,
+                                  f.hmd,
+                                  max_cyclo,
+                                  min_cyclo,
+                                  f.getAvgCyclo(),
+                                  f.getMedianCyclo(),
+                                  f.getTotalCyclo())
 
-    def print_files_with_functions(self):
-        template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
-        print template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",)
-        template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
+
+                
+    def print_files_with_functions (self, show_path=False, show_header=True):
+
+        if show_header:
+            template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
+            print template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",)
+
+        if show_path:
+            template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}  {5:<}"
+        else:
+            template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
+
         for f in self._files:
-
             for fun in f.functions:                
-            
-                print template.format(f.name[0:10],
+                if show_path:
+                    print template.format(f.name[0:10],
                                       fun.name.split()[-1][0:15],
                                       fun.sloc,
                                       fun.cyclo,
-                                      fun.returns)            
+                                      fun.returns,
+                                      f.path)
+                else:
+                    print template.format(f.name[0:10],
+                                      fun.name.split()[-1][0:15],
+                                      fun.sloc,
+                                      fun.cyclo,
+                                      fun.returns)
+                    
+                    
 if __name__ == '__main__':
 
 
@@ -218,12 +269,22 @@ if __name__ == '__main__':
 
     parser.add_argument('-f', '--functions', action='store_true',
                         help='show metrics for functions instead of files')
+
+    parser.add_argument('-p', '--path', action='store_true',
+                        help='show full file path in the last column')
+    
+    parser.add_argument('-n', '--no-header', action='store_false',
+                        help='do not show metrics names in the first row')
     
     args = parser.parse_args()
 
     c = CMetrics(MCCABE, HALSTEAD, KDSI)
     c.measure_target(args.target_dir[0])
+
+    header = args.no_header
+    path = args.path
+    
     if args.functions:
-        c.print_files_with_functions()
+        c.print_files_with_functions(show_path=path, show_header=header)
     else:
-        c.print_files_without_functions()
+        c.print_files_without_functions(show_path=path, show_header=header)
