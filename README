@@ -1,43 +1,87 @@
-C metrics package.
+C metrics package
+=================
+
+INSTALL
+-------
+
+./configure
+make
+make install
+
+If you have several Python installations, select one with
+
+PYTHON=path_to_your_python_binary ./configure
+make
+make install
+
+REQUIREMENTS
+------------
+
+You need Python>2.6, Flex, Yacc and GCC.
+
+USAGE
+-----
+
+cmetrics [-h] [-f] [-p] [-n] target_dir
+
+positional arguments:
+  target_dir       directory with sources (recursively scanned)
+
+optional arguments:
+  -h, --help       show this help message and exit
+  -f, --functions  show metrics for functions instead of files
+  -p, --path       show full file path in the last column
+  -n, --no-header  do not show metrics names in the first row
+	  
+
+HOW TO INTERPRET THE OUTPUT OF CMETRICS
+---------------------------------------
+
+CMetrics measures size and complexity for C files. The metrics are the
+following:
+
+ SLOC    Source Lines of Code (text lines excluding blanks and
+         comments)
+ LOC	 Text lines in the source code file (including blanks, etc)
+ BLANK	 Number of blank lines
+ COM.L	 Number of lines that are exclusively comments (no code)
+ COM.N	 Number of comments in the file (a comment can be multiline)
+ H.LEN	 Halstead's Length
+ H.VOL	 Halstead's Volume
+ H.LEVEL Halstead's Level
+ H MEN.D Halstead's number of mental discriminations
+ MAXCY	 Maximum McCabe's cyclomatic complexity (between all the
+         functions)
+ MINCY	 Minimum McCabe's cyclomatic complexity
+ AVGCY	 Average McCabe's cyclomatic complexity
+ MEDCY	 Median McCabe's cyclomatic complexity
+ TOTCY	 Total McCabe's cyclomatic complexity (sum of all functions)
+
+If you use the '-f' option, you will get info for functions instead of
+files. If the function name is "***", it means that it is code outside
+of the scope of functions but inside the file. The available metrics
+are:
+
+ SLOC    Source Lines of code
+ CYCLO	 McCabe's cyclomatic complexity
+ RETURN	 Number of exit points in the function
+
+COPYRIGHT INFO
+--------------
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version.
+
+See the COPYING file for details.
+
+(c) 2007-2011 Israel Herraiz
 
 Imported from the C Metrics package by Brian Renaud.
 
 It has been "adopted" by Libresoft with permission of the original
 author, and it is now part of the Libresoft-tools project.
 
-Check http://forge.morfeo-project.org/projects/libresoft-tools for
-details
+Check https://projects.libresoft.es/wiki/cmetrics for details
 
-What tools are included in this package?
-========================================
-
-mccabe ------ Measures cyclomatic's complexity and number of function
-returns for a given C file.  It returns the values at the level of
-function (this is a value per function).
-
-It uses stripstr to remove strings from the C file.  It uses stripcom
-to remove comments from the C file.
-
-kdsi ----
-
-Measures SLOC, number of blank lines, number of comment lines and
-number of comments for a C file.
-
-The output is the above metrics, in that order, at a file level (this
-is, a set of values per file).
-
-halstead --------
-
-Masures Halstead's length, volumen, level and mental discriminations
-for a C file.
-
-The output is the above metrics, in that order, at a file level (this
-is, a set of values per file).
-
-Other utilities ---------------
-
-stripcom to remove the comments of a C file stripstr to remove the
-strings of a C file
-
-With these two utilities and indent you can generate "clean" C code
-(this is, only code, with the same indentation style, etc).
