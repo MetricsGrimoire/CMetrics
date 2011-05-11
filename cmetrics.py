@@ -124,8 +124,12 @@ class CMetrics:
         self._mccabe_cmd = mccabe_cmd
         self._halstead_cmd = halstead_cmd
         self._kdsi_cmd = kdsi_cmd
+
+        self.only_measure_funcs = False
         
-    def measure_target (self, target_dir):
+    def measure_target (self, target_dir, only_funcs=False):
+
+        self.only_measure_funcs = only_funcs
 
         for root, dirs, files in os.walk(target_dir):
             for f in files:
@@ -146,24 +150,25 @@ class CMetrics:
             _name, func, sloc, cyclo, returns = l.split('\t')
 
             f.addFunction (Function (func, cyclo, sloc, returns))
+
+        if not self.only_measure_funcs:
+            kdsi_o = getoutput("%s %s" % (self._kdsi_cmd, f.path))
+
+            loc, blanks, comment_l, comments, _name = kdsi_o.split()
+            f.loc = int(loc)
+            f.blanks = int(blanks)
+            f.comment_l = int(comment_l)
+            f.comments = int(comments)
+            f.sloc = f.loc - f.blanks - f.comment_l
+
+            halstead_o = getoutput("%s %s" % (self._halstead_cmd, f.path))
+
+            _name, hlength, hvolume, hlevel, hmd = halstead_o.split()
+            f.hlength = int(hlength)
+            f.hvolume = int(hvolume)
+            f.hlevel = float(hlevel)
+            f.hmd = int(hmd)
             
-        kdsi_o = getoutput("%s %s" % (self._kdsi_cmd, f.path))
-
-        loc, blanks, comment_l, comments, _name = kdsi_o.split()
-        f.loc = int(loc)
-        f.blanks = int(blanks)
-        f.comment_l = int(comment_l)
-        f.comments = int(comments)
-        f.sloc = f.loc - f.blanks - f.comment_l
-
-        halstead_o = getoutput("%s %s" % (self._halstead_cmd, f.path))
-
-        _name, hlength, hvolume, hlevel, hmd = halstead_o.split()
-        f.hlength = int(hlength)
-        f.hvolume = int(hvolume)
-        f.hlevel = float(hlevel)
-        f.hmd = int(hmd)
-        
         return f
 
     def print_files_without_functions (self, show_path=False, show_header=True):
@@ -279,7 +284,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     c = CMetrics(MCCABE, HALSTEAD, KDSI)
-    c.measure_target(args.target_dir[0])
+    c.measure_target(args.target_dir[0], only_funcs=args.functions)
 
     header = args.no_header
     path = args.path

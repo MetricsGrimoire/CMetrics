@@ -10,6 +10,9 @@
 #define CODE 1
 #define STRING 2
 #define CHARSTR 3
+#define LINECOM 4
+
+const char EOL = '\n';
 
 void	cstrip();
 void	shstrip();
@@ -89,7 +92,7 @@ cstrip( fp )
 
 	while ( (c = getc( fp )) != EOF )
 	{
-		if ( state != COMMENT && c == '\\' )
+	        if ( c == '\\' && state != COMMENT && state != LINECOM)
 		{
 			if ( (c = getc(fp)) != EOF )
 			{
@@ -114,8 +117,10 @@ cstrip( fp )
 			{
 				if ( (c = getc(fp)) != EOF )
 				{
-					if ( c == '*' )
+					if ( c == '*')
 						state = COMMENT;
+					else if ( c == '/')
+     					        state = LINECOM;
 					else
 					{
 						putchar( '/' );
@@ -152,6 +157,16 @@ cstrip( fp )
 			if ( c == '\'' )
 				state = CODE;
 			putchar( c );
+		}
+		else if ( state == LINECOM )
+		{
+		  if ( c == EOL)
+		  {
+		    state = CODE;
+		    putchar( c );
+		  }
+		  else
+		    state = LINECOM;
 		}
 		else	/* state is comment */
 		{
