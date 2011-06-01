@@ -147,8 +147,13 @@ class CMetrics:
 
         for l in mccabe_o.split('\n'):
 
-            _name, func, sloc, cyclo, returns = l.split('\t')
-
+            try:
+                _name, func, sloc, cyclo, returns = l.split('\t')
+            except ValueError:
+                mccabe_data = l.split('\t')
+                mccabe_data.remove('')
+                _name, func, sloc, cyclo, returns = mccabe_data
+                
             f.addFunction (Function (func, cyclo, sloc, returns))
 
         if not self.only_measure_funcs:
