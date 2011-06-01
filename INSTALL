@@ -11,7 +11,15 @@ PYTHON=path_to_your_python_binary ./configure
 make
 make install
 
+if you have downloaded CMetrics from its git repository:
+
+./autogen.sh
+make
+make install
+
 REQUIREMENTS
 ------------
 
 You need Python>2.6, Flex, Yacc and GCC.
+
+From git repository, also you need: autoconf
