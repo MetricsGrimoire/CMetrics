@@ -170,9 +170,15 @@ class CMetrics:
 
             _name, hlength, hvolume, hlevel, hmd = halstead_o.split()
             f.hlength = int(hlength)
-            f.hvolume = int(hvolume)
-            f.hlevel = float(hlevel)
-            f.hmd = int(hmd)
+            
+            if hvolume == "-nan" or hvolume == "nan":
+                f.hvolume = 0
+                f.hlevel = 1.
+                f.hmd = 0
+            else:
+                f.hvolume = int(hvolume)
+                f.hlevel = float(hlevel)
+                f.hmd = int(hmd)
             
         return f
 
