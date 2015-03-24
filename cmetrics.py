@@ -19,7 +19,7 @@
 # Authors : Israel Herraiz <isra@herraiz.org>
 
 
-from commands import getoutput
+from subprocess import getoutput
 import os
 import argparse
 
@@ -92,10 +92,10 @@ class SourceCodeFile:
         cyclos = [x.cyclo for x in self.functions]
 
         if len(cyclos) % 2 == 1:
-            return cyclos[(len(cyclos)+1)/2-1]
+            return cyclos[(len(cyclos)+1)//2-1]
         else:
-            lower = cyclos[len(cyclos)/2-1]
-            upper = cyclos[len(cyclos)/2]
+            lower = cyclos[len(cyclos)//2-1]
+            upper = cyclos[len(cyclos)//2]
 
         return (lower + upper) / 2  
 
@@ -143,7 +143,7 @@ class CMetrics:
 
         f = SourceCodeFile (sourcecode_fn)
     
-        mccabe_o = getoutput("%s -n %s" % (self._mccabe_cmd, f.path))
+        mccabe_o = getoutput("%s -n %r" % (self._mccabe_cmd, f.path))
 
         for l in mccabe_o.split('\n'):
 
@@ -157,7 +157,7 @@ class CMetrics:
             f.addFunction (Function (func, cyclo, sloc, returns))
 
         if not self.only_measure_funcs:
-            kdsi_o = getoutput("%s %s" % (self._kdsi_cmd, f.path))
+            kdsi_o = getoutput("%s %r" % (self._kdsi_cmd, f.path))
 
             loc, blanks, comment_l, comments, _name = kdsi_o.split()
             f.loc = int(loc)
@@ -166,7 +166,7 @@ class CMetrics:
             f.comments = int(comments)
             f.sloc = f.loc - f.blanks - f.comment_l
 
-            halstead_o = getoutput("%s %s" % (self._halstead_cmd, f.path))
+            halstead_o = getoutput("%s %r" % (self._halstead_cmd, f.path))
 
             _name, hlength, hvolume, hlevel, hmd = halstead_o.split()
             f.hlength = int(hlength)
@@ -186,7 +186,7 @@ class CMetrics:
 
         if show_header:
             template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9}  {10:>9}  {11:>5}  {12:>5}  {13:>5}  {14:>5}  {15:>5}"
-            print template.format("FILE", "SLOC", "LOC", "FUNCS", "BLANK", "COM.L", "COM.N", "H LEN", "H VOL", "H LEVEL", "H MEN. D.",  "MAXCY",  "MINCY", "AVGCY", "MEDCY", "TOTCY",)
+            print(template.format("FILE", "SLOC", "LOC", "FUNCS", "BLANK", "COM.L", "COM.N", "H LEN", "H VOL", "H LEVEL", "H MEN. D.",  "MAXCY",  "MINCY", "AVGCY", "MEDCY", "TOTCY",))
 
         if show_path:
             template = "{0:<12}  {1:>5}  {2:>5}  {3:>5}  {4:>5}  {5:>5}  {6:>5}  {7:>5}  {8:>5}  {9:>9.3e}  {10:>9.3e}  {11:>5}  {12:>5}  {13:>5}  {14:>5}  {15:>5} {16:<}"
@@ -209,7 +209,7 @@ class CMetrics:
                 
 
             if show_path:
-                print template.format(f.name,
+                print(template.format(f.name,
                                   f.sloc,
                                   f.loc,
                                   f.nfuncs,
@@ -225,10 +225,10 @@ class CMetrics:
                                   f.getAvgCyclo(),
                                   f.getMedianCyclo(),
                                   f.getTotalCyclo(),
-                                  f.path)
+                                  f.path))
                             
             else:
-                print template.format(f.name,
+                print(template.format(f.name,
                                   f.sloc,
                                   f.loc,
                                   f.nfuncs,
@@ -243,7 +243,7 @@ class CMetrics:
                                   min_cyclo,
                                   f.getAvgCyclo(),
                                   f.getMedianCyclo(),
-                                  f.getTotalCyclo())
+                                  f.getTotalCyclo()))
 
 
                 
@@ -251,7 +251,7 @@ class CMetrics:
 
         if show_header:
             template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}"
-            print template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",)
+            print(template.format("FILE", "FUNC", "SLOC", "CYCLO", "RETURN",))
 
         if show_path:
             template = "{0:<12}  {1:<15}  {2:>5}  {3:>5}  {4:>5}  {5:<}"
@@ -261,18 +261,18 @@ class CMetrics:
         for f in self._files:
             for fun in f.functions:                
                 if show_path:
-                    print template.format(f.name[0:10],
+                    print(template.format(f.name[0:10],
                                       fun.name.split()[-1][0:15],
                                       fun.sloc,
                                       fun.cyclo,
                                       fun.returns,
-                                      f.path)
+                                      f.path))
                 else:
-                    print template.format(f.name[0:10],
+                    print(template.format(f.name[0:10],
                                       fun.name.split()[-1][0:15],
                                       fun.sloc,
                                       fun.cyclo,
-                                      fun.returns)
+                                      fun.returns))
                     
                     
 if __name__ == '__main__':

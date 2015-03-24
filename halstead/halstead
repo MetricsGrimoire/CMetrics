@@ -32,9 +32,9 @@ then
 	exit 1
 fi
 
-for file in $*
+for file in "$@"
 do
-	stripcom ${file} | stripstr |\
+	stripcom "${file}" | stripstr |\
 	c_halsfilt 2> ${N1} |\
 	awk ' { for ( i = 1; i <= NF; i++) print $i; } ' |\
 	sort > ${N2}	
